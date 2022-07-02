@@ -2,10 +2,9 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
+const { NODE_ENV, JWT_SECRET = 'dfYSD54hvdhDSH7db5dsbDjg' } = process.env;
 
 const AlreadyExistData = require('../errors/AlreadyExistData');
-const NoAccess = require('../errors/NoAccess');
 const NotFound = require('../errors/NotFound');
 const NotValidCode = require('../errors/NotValidCode');
 
@@ -14,22 +13,15 @@ const NotValidJwt = require('../errors/NotValidJwt');
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
-  if (!email || !password) {
-    throw new NotValidJwt('Неверные почта или пароль');
-  }
-
   User.findOne({ email })
     .select('+password')
     .then((user) => {
       if (!user) {
         throw new NotValidJwt('Неверные почта или пароль');
-      } else {
-        bcrypt.compare(password, user.password, ((err, valid) => {
-          if (err) {
-            throw new NoAccess('Ошибка доступа');
-          }
-
-          if (!valid) {
+      }
+      return bcrypt.compare(password, user.password)
+        .then((matched) => {
+          if (!matched) {
             throw new NotValidJwt('Неверные почта или пароль');
           } else {
             const token = jwt.sign(
@@ -45,8 +37,7 @@ module.exports.login = (req, res, next) => {
               })
               .send({ token });
           }
-        }));
-      }
+        });
     })
     .catch((err) => {
       next(err);
@@ -70,8 +61,9 @@ module.exports.getUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         throw new NotValidCode('Введен некорректый id');
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -94,10 +86,6 @@ module.exports.createUser = (req, res, next) => {
     email,
     password,
   } = req.body;
-
-  if (!email || !password) {
-    throw new NotValidCode('Пароль или почта не могут быть пустыми');
-  }
 
   User.findOne({ email })
     .then((user) => {
@@ -122,11 +110,11 @@ module.exports.createUser = (req, res, next) => {
           .catch((err) => {
             if (err.name === 'ValidationError') {
               next(new NotValidCode('Введены некорректные данные'));
-            }
-            if (err.code === 11000) {
+            } else if (err.code === 11000) {
               next(new AlreadyExistData('Пользователь с таким email уже существует'));
+            } else {
+              next(err);
             }
-            next(err);
           });
       }
     })
@@ -149,8 +137,9 @@ module.exports.updateUserInfo = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new NotValidCode('Введены некорректные данные'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -168,7 +157,8 @@ module.exports.updateUserAvatar = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new NotValidCode('Введены некорректные данные'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };

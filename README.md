@@ -3,3 +3,6 @@
   
 * Домен проека
 https://mesto.julia.practicum.nomoredomains.xyz/
+
+* IP
+51.250.86.255
