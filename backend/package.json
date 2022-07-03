@@ -8,16 +8,8 @@
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Julia-Rulova/express-mesto-gha.git"
-  },
   "author": "Julia-Rulova",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Julia-Rulova/express-mesto-gha/issues"
-  },
-  "homepage": "https://github.com/Julia-Rulova/express-mesto-gha#readme",
   "devDependencies": {
     "eslint": "^8.17.0",
     "eslint-config-airbnb-base": "^15.0.0",
