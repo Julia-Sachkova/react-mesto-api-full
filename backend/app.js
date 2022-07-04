@@ -24,7 +24,10 @@ const { linkReg } = require('./utils/constants');
 const app = express();
 const { PORT = 3000 } = process.env;
 
-app.use(cors({ origin: allowedCors }));
+app.use(cors({
+  origin: allowedCors,
+  credentials: true
+}));
 
 const { login, createUser } = require('./controllers/users');
 
