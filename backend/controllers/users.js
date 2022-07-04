@@ -60,7 +60,7 @@ module.exports.getUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new NotValidCode('Введен некорректый id');
+        next(new NotValidCode('Введен некорректый id'));
       } else {
         next(err);
       }

@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const { JWT_SECRET = 'jsbduyG65asashvh3bSjhD7sSjhsdd' } = process.env;
+const { JWT_SECRET = 'dev-secret' } = process.env;
 
 const NotValidJwt = require('../errors/NotValidJwt');
 
