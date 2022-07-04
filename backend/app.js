@@ -3,8 +3,8 @@ const express = require('express');
 const { errors, celebrate, Joi } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const bodyParser = require('body-parser');
-const cors = require('./middlewares/cors');
 const auth = require('./middlewares/auth');
 const errorsHandler = require('./middlewares/errorsHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -15,7 +15,7 @@ const { linkReg } = require('./utils/constants');
 const app = express();
 const { PORT = 3000 } = process.env;
 
-app.use(cors);
+app.use(cors());
 
 const { login, createUser } = require('./controllers/users');
 
