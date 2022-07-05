@@ -9,14 +9,14 @@ const auth = require('./middlewares/auth');
 const errorsHandler = require('./middlewares/errorsHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const allowedCors = [
-  'http://mesto.julia.practicum.nomoredomains.xyz',
-  'https://mesto.julia.practicum.nomoredomains.xyz',
-  'http://localhost:3000',
-  'https://localhost:3000',
-  'http://localhost:3001',
-  'https://localhost:3001'
-]
+// const allowedCors = [
+//   'http://mesto.julia.practicum.nomoredomains.xyz',
+//   'https://mesto.julia.practicum.nomoredomains.xyz',
+//   'http://localhost:3000',
+//   'https://localhost:3000',
+//   'http://localhost:3001',
+//   'https://localhost:3001'
+// ]
 
 const NotFound = require('./errors/NotFound');
 const { linkReg } = require('./utils/constants');
@@ -24,10 +24,12 @@ const { linkReg } = require('./utils/constants');
 const app = express();
 const { PORT = 3000 } = process.env;
 
-app.use(cors({
-  origin: allowedCors,
-  credentials: true
-}));
+// app.use(cors({
+//   origin: allowedCors,
+//   credentials: true
+// }));
+
+app.use(cors());
 
 const { login, createUser } = require('./controllers/users');
 
