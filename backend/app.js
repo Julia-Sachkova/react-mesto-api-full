@@ -9,15 +9,6 @@ const auth = require('./middlewares/auth');
 const errorsHandler = require('./middlewares/errorsHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-// const allowedCors = [
-//   'http://mesto.julia.practicum.nomoredomains.xyz',
-//   'https://mesto.julia.practicum.nomoredomains.xyz',
-//   'http://localhost:3000',
-//   'https://localhost:3000',
-//   'http://localhost:3001',
-//   'https://localhost:3001'
-// ]
-
 const NotFound = require('./errors/NotFound');
 const { linkReg } = require('./utils/constants');
 
@@ -33,7 +24,7 @@ const allowedCors = [
   'https://api.mesto.julia.practicum.nomoreparties.sbs',
 ];
 
-app.use(cors({
+app.use('*', cors({
   origin: allowedCors,
   credentials: true,
 }));
