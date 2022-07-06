@@ -35,16 +35,17 @@ const allowedCors = [
 
 app.use(cors({
   origin: allowedCors,
-  credentials: true
+  credentials: true,
 }));
 
 // app.use(cors());
 
 const { login, createUser } = require('./controllers/users');
 
-mongoose.connect('mongodb://localhost:27017/mestodb');
+mongoose.connect('mongodb://localhost:27017/mestodb', { useNewUrlParser: true });
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(requestLogger);
