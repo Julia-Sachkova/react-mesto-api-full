@@ -46,7 +46,9 @@ module.exports.login = (req, res, next) => {
 
 module.exports.getUsers = (_req, res, next) => {
   User.find({})
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => {
+      res.status(200).send({ data: user });
+    })
     .catch((err) => {
       next(err);
     });

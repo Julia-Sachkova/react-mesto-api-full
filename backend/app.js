@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const auth = require('./middlewares/auth');
-const errorsHandler = require('./middlewares/errorsHandler');
+// const errorsHandler = require('./middlewares/errorsHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const NotFound = require('./errors/NotFound');
@@ -75,6 +75,17 @@ app.all('*', (_req, _res, next) => {
 app.use(errorLogger);
 
 app.use(errors());
-app.use(errorsHandler);
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = err;
+
+  res
+    .status(statusCode)
+    .send({
+      message: statusCode === 500
+        ? `На сервере произошла ошибка ${err}`
+        : message,
+    });
+  next();
+});
 
 app.listen(PORT);
