@@ -61,7 +61,7 @@ module.exports.deleteCard = (req, res, next) => {
         throw new NoAccess('Вы не можете удалить данную карточку');
       }
 
-      cardDelete();
+      return cardDelete();
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -79,9 +79,7 @@ module.exports.likeCard = (req, res, next) => {
     { new: true },
   )
     .orFail(new NotFound('Карточка не найдена'))
-    .then((card) => {
-      res.send(card);
-    })
+    .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new NotValidCode('Введен некорректный id'));
@@ -98,9 +96,7 @@ module.exports.dislikeCard = (req, res, next) => {
     { new: true },
   )
     .orFail(new NotFound('Карточка не найдена'))
-    .then((card) => {
-      res.send(card);
-    })
+    .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new NotValidCode('Введен некорректный id'));

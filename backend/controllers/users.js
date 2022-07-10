@@ -46,9 +46,7 @@ module.exports.login = (req, res, next) => {
 
 module.exports.getUsers = (_req, res, next) => {
   User.find({})
-    .then((user) => {
-      res.status(200).send({ data: user });
-    })
+    .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
       next(err);
     });
@@ -57,9 +55,7 @@ module.exports.getUsers = (_req, res, next) => {
 module.exports.getUser = (req, res, next) => {
   User.findById(req.params.userId)
     .orFail(new NotFound('Пользователь не найден'))
-    .then((user) => {
-      res.send(user);
-    })
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new NotValidCode('Введен некорректый id'));
@@ -72,9 +68,7 @@ module.exports.getUser = (req, res, next) => {
 module.exports.getMe = (req, res, next) => {
   User.findById(req.user._id)
     .orFail(new NotFound('Пользователь не найден'))
-    .then((user) => {
-      res.send(user);
-    })
+    .then((user) => res.send(user))
     .catch((err) => {
       next(err);
     });
@@ -133,9 +127,7 @@ module.exports.updateUserInfo = (req, res, next) => {
     runValidators: true,
   })
     .orFail(new NotFound('Пользователь не найден'))
-    .then((user) => {
-      res.send(user);
-    })
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new NotValidCode('Введены некорректные данные'));
@@ -153,9 +145,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
     runValidators: true,
   })
     .orFail(new NotFound('Пользователь не найден'))
-    .then((user) => {
-      res.send(user);
-    })
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new NotValidCode('Введены некорректные данные'));
