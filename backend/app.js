@@ -22,7 +22,7 @@ const allowedCors = [
   'https://localhost:3001',
   'http://mesto.julia.practicum.nomoredomains.xyz',
   'https://mesto.julia.practicum.nomoredomains.xyz',
-  'https://api.mesto.julia.practicum.nomoreparties.sbs',
+  'http://api.mesto.julia.practicum.nomoreparties.sbs',
   'https://api.mesto.julia.practicum.nomoreparties.sbs',
 ];
 
