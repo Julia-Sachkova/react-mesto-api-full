@@ -1,5 +1,5 @@
 {
-  "name": "express-mesto-gha",
+  "name": "mesto",
   "version": "1.0.0",
   "description": "Проект Mesto фронтенд + бэкенд",
   "main": "app.js",

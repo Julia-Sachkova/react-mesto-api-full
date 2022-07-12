@@ -8,39 +8,22 @@ const AlreadyExistData = require('../errors/AlreadyExistData');
 const NotFound = require('../errors/NotFound');
 const NotValidCode = require('../errors/NotValidCode');
 
-const NotValidJwt = require('../errors/NotValidJwt');
+const NoAccess = require('../errors/NoAccess');
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
-  User.findOne({ email })
-    .select('+password')
+  return User.findUserByCredentials(email, password)
     .then((user) => {
-      if (!user) {
-        throw new NotValidJwt('Неверные почта или пароль');
-      }
-      return bcrypt.compare(password, user.password)
-        .then((matched) => {
-          if (!matched) {
-            throw new NotValidJwt('Неверные почта или пароль');
-          } else {
-            const token = jwt.sign(
-              { _id: user._id },
-              NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
-              { expiresIn: '7d' },
-            );
-
-            return res
-              .cookie('jwt', token, {
-                httpOnly: true,
-                sameSite: true,
-              })
-              .send({ token });
-          }
-        });
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'SECRET_KEY',
+        { expiresIn: '7d' },
+      );
+      res.send({ token });
     })
-    .catch((err) => {
-      next(err);
+    .catch(() => {
+      next(new NoAccess('Ошибка доступа'));
     });
 };
 
