@@ -20,7 +20,7 @@ module.exports.login = (req, res, next) => {
         NODE_ENV === 'production' ? JWT_SECRET : 'SECRET_KEY',
         { expiresIn: '7d' },
       );
-      res.send({ token });
+      return res.send({ token });
     })
     .catch(() => {
       next(new NoAccess('Ошибка доступа'));
@@ -29,7 +29,7 @@ module.exports.login = (req, res, next) => {
 
 module.exports.getUsers = (_req, res, next) => {
   User.find({})
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => res.send({ data: user }))
     .catch((err) => {
       next(err);
     });
@@ -105,10 +105,7 @@ module.exports.createUser = (req, res, next) => {
 module.exports.updateUserInfo = (req, res, next) => {
   const { name, about } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, { name, about }, {
-    new: true,
-    runValidators: true,
-  })
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .orFail(new NotFound('Пользователь не найден'))
     .then((user) => res.send(user))
     .catch((err) => {

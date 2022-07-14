@@ -12,10 +12,18 @@ class Api {
         return Promise.reject(`Ошибка: ${res.status}`);
     }
 
+    getHeaders() {
+        const token = localStorage.getItem('jwt');
+        return {
+            'Authorization': `Bearer ${token}`,
+            ...this.headers,
+        };
+    }
+
     getUserInfoApi() {
         return fetch(`${this._url}/users/me`, {
             method: 'GET',
-            headers: this._headers,
+            headers: this.getHeaders(),
             credentials: this._credentials
         })
             .then(this._checkResOk);
@@ -24,7 +32,7 @@ class Api {
     getCards() {
         return fetch(`${this._url}/cards`, {
             method: 'GET',
-            headers: this._headers,
+            headers: this.getHeaders(),
             credentials: this._credentials
         })
             .then(this._checkResOk);
@@ -33,7 +41,7 @@ class Api {
     editUserInfo(userData) {
         return fetch(`${this._url}/users/me`, {
             method: 'PATCH',
-            headers: this._headers,
+            headers: this.getHeaders(),
             credentials: this._credentials,
             body: JSON.stringify({
                 name: userData.name,
@@ -46,7 +54,7 @@ class Api {
     createUserCard(cardItem) {
         return fetch(`${this._url}/cards`, {
             method: 'POST',
-            headers: this._headers,
+            headers: this.getHeaders(),
             credentials: this._credentials,
             body: JSON.stringify({
                 name: cardItem.name,
@@ -59,7 +67,7 @@ class Api {
     cardLike(id) {
         return fetch(`${this._url}/cards/${id}/likes`, {
             method: 'PUT',
-            headers: this._headers,
+            headers: this.getHeaders(),
             credentials: this._credentials
         })
             .then(this._checkResOk);
@@ -68,7 +76,7 @@ class Api {
     cardDislike(id) {
         return fetch(`${this._url}/cards/${id}/likes`, {
             method: 'DELETE',
-            headers: this._headers,
+            headers: this.getHeaders(),
             credentials: this._credentials
         })
             .then(this._checkResOk);
@@ -77,7 +85,7 @@ class Api {
     changeLikeCardStatus(id, isLiked) {
         return fetch(`${this._url}/cards/${id}/likes`, {
             method: `${isLiked ? 'PUT' : 'DELETE'}`,
-            headers: this._headers,
+            headers: this.getHeaders(),
             credentials: this._credentials
         })
             .then(this._checkResOk);
@@ -86,7 +94,7 @@ class Api {
     deleteUserCard(id) {
         return fetch(`${this._url}/cards/${id}`, {
             method: 'DELETE',
-            headers: this._headers,
+            headers: this.getHeaders(),
             credentials: this._credentials
         })
             .then(this._checkResOk);
@@ -95,7 +103,7 @@ class Api {
     editAvatar(userData) {
         return fetch(`${this._url}/users/me/avatar`, {
             method: 'PATCH',
-            headers: this._headers,
+            headers: this.getHeaders(),
             credentials: this._credentials,
             body: JSON.stringify({
                 avatar: userData.avatar
@@ -106,9 +114,10 @@ class Api {
 }
 
 const api = new Api({
-    baseUrl: 'http://api.mesto.julia.practicum.nomoreparties.sbs',
+    baseUrl: 'http://localhost:3000',
     headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        // 'Authorization': `Bearer ${localStorage.getItem('token')}`
     },
     credentials: 'include'
 });

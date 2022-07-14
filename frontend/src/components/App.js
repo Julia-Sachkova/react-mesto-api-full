@@ -33,13 +33,25 @@ function App() {
   const [email, setEmail] = React.useState('');
   const history = useHistory();
 
-  function handleCardDelete(card) {
-    setDeleteCard(card);
-
-    handleDeletePopupClick();
+  function handleTokenCheck() {
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      auth.checkToken(jwt)
+        .then((res) => {
+          handleLogin();
+          history.push('/');
+          setEmail(res.email);
+        })
+    }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
+    handleTokenCheck();
+  }, []);
+
+  useEffect(() => {
+    // handleTokenCheck();
+
     if (loggedIn) {
       Promise.all([api.getUserInfoApi(), api.getCards()])
         .then(([userData, cardData]) => {
@@ -49,24 +61,13 @@ function App() {
         .catch((err) => {
           console.log(err);
         });
-    } else {
-      return;
     }
   }, [loggedIn]);
 
-  useEffect(() => {
-    if (localStorage.getItem('token')) {
-      const token = localStorage.getItem('token')
-      auth.checkToken(token)
-        .then((res) => {
-          if (res) {
-            handleLogin();
-            history.push('/');
-            setEmail(res.data.email);
-          }
-        })
-    }
-  });
+  function handleCardDelete(card) {
+    setDeleteCard(card);
+    handleDeletePopupClick();
+  }
 
   function handleCardLike(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
@@ -126,7 +127,11 @@ function App() {
   function handleUpdateUser(user) {
     api.editUserInfo(user)
       .then((data) => {
-        setCurrentUser(data);
+        setCurrentUser({
+          ...currentUser,
+          name: data.name,
+          about: data.about
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -139,7 +144,10 @@ function App() {
   function handleUpdateAvatar(user) {
     api.editAvatar(user)
       .then((dataAvatar) => {
-        setCurrentUser(dataAvatar);
+        setCurrentUser({
+          ...currentUser,
+          avatar: dataAvatar.avatar
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -166,8 +174,22 @@ function App() {
     setLoggedIn(true);
   }
 
+  function handleLoginSubmit(email, password) {
+    auth.authorization(email, password)
+      .then((res) => {
+        localStorage.setItem('jwt', res.token);
+        setEmail(email);
+        handleLogin();
+        history.push('/');
+      })
+      .catch((err) => {
+        setInfoLoginPopupOpen(true);
+        console.log(err)
+      });
+  }
+
   function handleRegistrSubmit(email, password) {
-    auth.register(email, password)
+    return auth.register(email, password)
       .then((data) => {
         setInfoPopupOpen(true);
         setIsReg(true);
@@ -180,22 +202,8 @@ function App() {
       });
   }
 
-  function handleLoginSubmit(email, password) {
-    auth.authorize(email, password)
-      .then((data) => {
-        if (data.token) {
-          setEmail(email);
-          handleLogin();
-          history.push('/');
-        }
-      })
-      .catch((err) => {
-        setInfoLoginPopupOpen(true);
-        console.log(err)
-      });
-  }
-
   function handleExit() {
+    localStorage.removeItem('jwt');
     setLoggedIn(false);
     history.push('/signin');
   }

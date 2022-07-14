@@ -11,26 +11,26 @@ export const register = (email, password) => {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        credentials: 'include',
+        // credentials: 'include',
         body: JSON.stringify({
-            "email": email,
-            "password": password
+            'email': email,
+            'password': password
         })
     })
         .then(checkResOk);
 };
 
-export const authorize = (email, password) => {
+export const authorization = (email, password) => {
     return fetch(`${BASE_URL}/signin`, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        credentials: 'include',
+        // credentials: 'include',
         body: JSON.stringify({
-            "email": email,
-            "password": password
+            'email': email,
+            'password': password
         })
     })
         .then(checkResOk);
@@ -42,10 +42,9 @@ export const checkToken = (token) => {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            "Authorization": `Bearer ${token}`
         },
-        credentials: 'include'
+        // credentials: 'include'
     })
-        .then(checkResOk)
-        .then(data => data);
+        .then(checkResOk);
 }
