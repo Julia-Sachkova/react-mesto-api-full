@@ -3,9 +3,10 @@ const express = require('express');
 const { errors, celebrate, Joi } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
-const cors = require('cors');
+// const cors = require('cors');
 const bodyParser = require('body-parser');
 const auth = require('./middlewares/auth');
+const cors = require('./middlewares/cors');
 // const errorsHandler = require('./middlewares/errorsHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
@@ -15,22 +16,22 @@ const { linkReg } = require('./utils/constants');
 const app = express();
 const { PORT = 3000 } = process.env;
 
-const allowedCors = [
-  'http://localhost:3000',
-  'https://localhost:3000',
-  'http://localhost:3001',
-  'https://localhost:3001',
-  'http://mesto.julia.practicum.nomoredomains.xyz',
-  'https://mesto.julia.practicum.nomoredomains.xyz',
-  'http://api.mesto.julia.practicum.nomoreparties.sbs',
-  'https://api.mesto.julia.practicum.nomoreparties.sbs',
-];
+// const allowedCors = [
+//   'http://localhost:3000',
+//   'https://localhost:3000',
+//   'http://localhost:3001',
+//   'https://localhost:3001',
+//   'http://mesto.julia.practicum.nomoredomains.xyz',
+//   'https://mesto.julia.practicum.nomoredomains.xyz',
+//   'http://api.mesto.julia.practicum.nomoreparties.sbs',
+//   'https://api.mesto.julia.practicum.nomoreparties.sbs',
+// ];
 
-app.use(cors({
-  origin: allowedCors,
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-}));
+// app.use(cors({
+//   origin: allowedCors,
+//   credentials: true,
+//   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+// }));
 
 // app.use(cors());
 
@@ -41,6 +42,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', { useNewUrlParser: true })
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+app.use(cors);
 
 app.use(requestLogger);
 
