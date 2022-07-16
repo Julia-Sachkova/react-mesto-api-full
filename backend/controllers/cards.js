@@ -33,11 +33,11 @@ module.exports.createCard = (req, res, next) => {
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  const { id } = req.params;
+  const { cardId } = req.params;
 
   const cardDelete = () => {
-    Card.findById(id)
-      .orFail(new NotFound('Карточка не найдена'))
+    Card.findById(cardId)
+      .orFail(new NotFound('Карточка не найдена!'))
       .then((card) => {
         if (!card.owner.equals(req.user._id)) {
           return next(new NoAccess('Нельзя удалить чужую карточку'));
@@ -54,8 +54,8 @@ module.exports.deleteCard = (req, res, next) => {
       });
   };
 
-  Card.findById(req.params.cardId)
-    .orFail(new NotFound('Карточка не найдена'))
+  Card.findById(cardId)
+    .orFail(new NotFound('Карточка не найдена.'))
     .then((card) => {
       if (req.user._id !== card.owner.toString()) {
         throw new NoAccess('Вы не можете удалить данную карточку');
