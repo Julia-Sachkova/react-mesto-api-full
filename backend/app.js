@@ -1,16 +1,17 @@
 require('dotenv').config();
 const express = require('express');
-const { errors, celebrate, Joi } = require('celebrate');
-const cookieParser = require('cookie-parser');
+// const { errors, celebrate, Joi } = require('celebrate');
+const { celebrate, Joi } = require('celebrate');
+// const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const auth = require('./middlewares/auth');
 // const cors = require('./middlewares/cors');
 // const errorsHandler = require('./middlewares/errorsHandler');
-const { requestLogger, errorLogger } = require('./middlewares/logger');
+// const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const NotFound = require('./errors/NotFound');
+// const NotFound = require('./errors/NotFound');
 const { linkReg } = require('./utils/constants');
 
 const app = express();
@@ -35,13 +36,14 @@ app.use(cors({
 
 // app.use(cors());
 
-const { login, createUser } = require('./controllers/users');
+// const { login, createUser } = require('./controllers/users');
+const { createUser } = require('./controllers/users');
 
 mongoose.connect('mongodb://localhost:27017/mestodb', { useNewUrlParser: true });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
+// app.use(cookieParser());
 
 // app.use(cors);
 
@@ -55,20 +57,20 @@ app.use(cookieParser());
 //   next();
 // });
 
-app.use(requestLogger);
+// app.use(requestLogger);
 
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-});
+// app.get('/crash-test', () => {
+//   setTimeout(() => {
+//     throw new Error('Сервер сейчас упадёт');
+//   }, 0);
+// });
 
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-  }),
-}), login);
+// app.post('/signin', celebrate({
+//   body: Joi.object().keys({
+//     email: Joi.string().required().email(),
+//     password: Joi.string().required(),
+//   }),
+// }), login);
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
@@ -82,27 +84,27 @@ app.post('/signup', celebrate({
 
 app.use(auth);
 
-app.use(require('./routes/users'));
-app.use(require('./routes/cards'));
+// app.use(require('./routes/users'));
+// app.use(require('./routes/cards'));
 
-app.all('*', (_req, _res, next) => {
-  next(new NotFound('Страница не найдена'));
-});
+// app.all('*', (_req, _res, next) => {
+//   next(new NotFound('Страница не найдена'));
+// });
 
-app.use(errorLogger);
+// app.use(errorLogger);
 
-app.use(errors());
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
+// app.use(errors());
+// app.use((err, req, res, next) => {
+//   const { statusCode = 500, message } = err;
 
-  res
-    .status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? `На сервере произошла ошибка ${err}`
-        : message,
-    });
-  next();
-});
+//   res
+//     .status(statusCode)
+//     .send({
+//       message: statusCode === 500
+//         ? `На сервере произошла ошибка ${err}`
+//         : message,
+//     });
+//   next();
+// });
 
 app.listen(PORT);
