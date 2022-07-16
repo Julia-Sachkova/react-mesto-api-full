@@ -15,23 +15,24 @@ const { linkReg } = require('./utils/constants');
 const app = express();
 const { PORT = 3000 } = process.env;
 
-// const allowedCors = [
-//   'http://localhost:3000',
-//   'https://localhost:3000',
-//   'http://localhost:3001',
-//   'https://localhost:3001',
-//   'http://mesto.julia.practicum.nomoredomains.xyz',
-//   'https://mesto.julia.practicum.nomoredomains.xyz',
-//   'http://api.mesto.julia.practicum.nomoreparties.sbs',
-//   'https://api.mesto.julia.practicum.nomoreparties.sbs',
-// ];
+const allowedCors = [
+  'http://localhost:3000',
+  'https://localhost:3000',
+  'http://localhost:3001',
+  'https://localhost:3001',
+  'http://mesto.julia.practicum.nomoredomains.xyz',
+  'https://mesto.julia.practicum.nomoredomains.xyz',
+  'http://api.mesto.julia.practicum.nomoreparties.sbs',
+  'https://api.mesto.julia.practicum.nomoreparties.sbs',
+];
 
-// app.use(cors({
-//   origin: allowedCors,
-//   credentials: true,
-// }));
+app.use(cors({
+  origin: allowedCors,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+}));
 
-app.use(cors());
+// app.use(cors());
 
 const { login, createUser } = require('./controllers/users');
 
